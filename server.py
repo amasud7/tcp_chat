@@ -30,8 +30,9 @@ def handle_client(client):
             broadcast(message) # update all other users with sent messages
         except: # if there is error with client 
             index = clients.index(client) # remove client from lists and close connection 
-            clients.remove(index)
-            names.remove(index)
+            clients.remove(client)
+            nickname = names[index]
+            names.remove(nickname)
             broadcast(f"{names[index]} has left the chat.")
             client.close()
             break
@@ -40,19 +41,19 @@ def main():
     # searching for connecting clients
     while True:
         client, addr = server.accept() # client connected and its address is stored in the variables
-
     # asking user for nickname
         client.send("NICK".encode('utf-8'))
         name = client.recv(1064) # dont understand why this is client and not server
         clients.append(client)
         names.append(name)
+        print(f"{name} has connected at {addr}")
         
     # Broadcasting name joined
         broadcast(f"{name} has joined the chat".encode('utf-8'))
-        client.send("You have connected to server".encode('utf-8')) # telling user they have connected
+        client.send("\nYou have connected to server".encode('utf-8')) # telling user they have connected
 
     # starting a new thread for every connection
-        thread = threading.Thread(target=handle_client, args=(client))
+        thread = threading.Thread(target=handle_client, args=(client,))
         thread.start()
 
 
