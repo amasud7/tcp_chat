@@ -52,7 +52,7 @@ def main():
         client.send("You have connected to server".encode('utf-8')) # telling user they have connected
 
     # starting a new thread for every connection
-        thread = threading.Thread(target=handle_client, args=client)
+        thread = threading.Thread(target=handle_client, args=(client))
         thread.start()
 
 
